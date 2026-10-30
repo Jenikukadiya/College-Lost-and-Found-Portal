@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Portal - College Lost & Found</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="portal.html" class="brand">
+      <div class="brand-icon">🔍</div>
+      <span>Campus Lost & Found</span>
+      <span class="brand-badge">Student & Staff</span>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <!-- Notifications Bell Button -->
+      <button id="notifBellBtn" class="btn btn-secondary btn-sm" style="position: relative; padding: 7px 12px;" title="View Notifications" aria-label="Notifications">
+        🔔 <span id="navNotifBadge" class="notif-counter" style="display: none;">0</span>
+      </button>
+
+      <!-- User Greeting / Profile Pill -->
+      <div id="userGreeting" style="font-size: 0.88rem; color: var(--text-main); font-weight: 500; padding: 4px 10px; background-color: var(--bg-card-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        Loading user...
+      </div>
+
+      <!-- Admin Panel Shortcut (Shown only for Administrators) -->
+      <a href="admin.html" id="adminPanelLink" class="btn btn-secondary btn-sm" style="display: none; border-color: var(--secondary); color: var(--secondary); font-weight: 600;">
+        🛡️ Admin Panel
+      </a>
+
+      <button id="logoutBtn" class="btn btn-danger-outline btn-sm">Log Out</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Tab Navigation Strip -->
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="dashboardTab" role="tab">📊 Dashboard</button>
+      <button class="tab-btn" data-tab="searchTab" role="tab">🔍 Browse Items</button>
+      <button class="tab-btn" data-tab="postLostTab" role="tab">📢 Report Lost Item</button>
+      <button class="tab-btn" data-tab="postFoundTab" role="tab">💡 Report Found Item</button>
+      <button class="tab-btn" data-tab="matchesTab" role="tab">🎯 Smart Matches</button>
+      <button class="tab-btn" data-tab="myPostsTab" role="tab">📋 My Posts</button>
+      <button class="tab-btn" data-tab="myClaimsTab" role="tab">📝 My Claims</button>
+      <button class="tab-btn" data-tab="notificationsTab" role="tab">
+        🔔 Notifications <span id="notifTabBadge" class="badge badge-rejected" style="display:none; padding: 1px 6px; font-size: 0.7rem; margin-left: 2px;">0</span>
+      </button>
+      <button class="tab-btn" data-tab="profileTab" role="tab">👤 Profile</button>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="portalAlertContainer"></div>
+
+    <!-- TAB 0: DASHBOARD (MAIN OVERVIEW) -->
+    <section id="dashboardTab" class="tab-content active">
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div class="welcome-info">
+          <h2 id="dashWelcomeName">Welcome to Campus Lost & Found</h2>
+          <p id="dashWelcomeSub">Access lost belongings reports, verify claims, and explore recent campus listings.</p>
+        </div>
+        <div class="welcome-actions">
+          <button class="btn btn-primary" onclick="switchTab('postLostTab')">
+            📢 Report Lost Item
+          </button>
+          <button class="btn btn-teal" onclick="switchTab('postFoundTab')">
+            💡 Report Found Item
+          </button>
+        </div>
+      </div>
+
+      <!-- Real Backend Data Summary Cards -->
+      <div class="stats-grid">
+        <div class="stat-card" style="cursor: pointer;" onclick="switchTab('myPostsTab')">
+          <div class="stat-header">
+            <span class="stat-label">My Active Posts</span>
+            <span class="stat-icon">📋</span>
+          </div>
+          <div class="stat-value" id="dashStatPosts">-</div>
+          <div style="font-size: 0.78rem; color: var(--secondary); margin-top: 4px;">View my submissions &rarr;</div>
+        </div>
+
+        <div class="stat-card" style="cursor: pointer;" onclick="switchTab('myClaimsTab')">
+          <div class="stat-header">
+            <span class="stat-label">My Claims</span>
+            <span class="stat-icon">⚖️</span>
+          </div>
+          <div class="stat-value" id="dashStatClaims">-</div>
+          <div style="font-size: 0.78rem; color: var(--secondary); margin-top: 4px;">Track claim statuses &rarr;</div>
+        </div>
+
+        <div class="stat-card" style="cursor: pointer;" onclick="switchTab('matchesTab')">
+          <div class="stat-header">
+            <span class="stat-label">Smart Matches</span>
+            <span class="stat-icon">🎯</span>
+          </div>
+          <div class="stat-value" id="dashStatMatches" style="color: var(--secondary);">-</div>
+          <div style="font-size: 0.78rem; color: var(--secondary); margin-top: 4px;">Potential match items &rarr;</div>
+        </div>
+
+        <div class="stat-card" style="cursor: pointer;" onclick="switchTab('notificationsTab')">
+          <div class="stat-header">
+            <span class="stat-label">Unread Alerts</span>
+            <span class="stat-icon">🔔</span>
+          </div>
+          <div class="stat-value" id="dashStatNotifs" style="color: #B91C1C;">-</div>
+          <div style="font-size: 0.78rem; color: var(--secondary); margin-top: 4px;">View notifications &rarr;</div>
+        </div>
+      </div>
+
+      <!-- Recent Campus Items Preview -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">Recent Campus Listings</h3>
+            <p class="card-subtitle">Latest lost and found items reported across campus facilities.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="switchTab('searchTab')">
+            Browse All Items &rarr;
+          </button>
+        </div>
+
+        <div id="dashRecentItemsGrid" class="item-grid" style="margin-top: 0;">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: BROWSE & FILTER ITEMS -->
+    <section id="searchTab" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">Browse & Filter Items</h3>
+            <p class="card-subtitle">Search published lost and found records by keywords, category, or location.</p>
+          </div>
+        </div>
+        
+        <!-- Search Controls -->
+        <div class="form-row">
+          <div class="form-group" style="grid-column: span 2;">
+            <label for="searchKeyword">Keyword Search</label>
+            <input type="text" id="searchKeyword" class="form-control" placeholder="Search by title, brand, description, or characteristics...">
+          </div>
+          <div class="form-group">
+            <label for="searchType">Post Type</label>
+            <select id="searchType" class="form-control">
+              <option value="ALL">All Posts (Lost & Found)</option>
+              <option value="LOST">Lost Items Only</option>
+              <option value="FOUND">Found Items Only</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="searchCategory">Category</label>
+            <select id="searchCategory" class="form-control">
+              <option value="all">All Categories</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="searchLocation">Location</label>
+            <input type="text" id="searchLocation" class="form-control" placeholder="e.g. Central Library, Block B">
+          </div>
+          <div class="form-group">
+            <label for="searchDateFrom">Date From</label>
+            <input type="date" id="searchDateFrom" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="searchDateTo">Date To</label>
+            <input type="date" id="searchDateTo" class="form-control">
+          </div>
+          <div class="form-group" style="display: flex; gap: 8px; align-items: flex-end;">
+            <button id="searchBtn" class="btn btn-primary" style="flex: 2;">
+              🔍 Apply Filters
+            </button>
+            <button id="clearFiltersBtn" class="btn btn-secondary" style="flex: 1;" title="Reset all filters">
+              ✕ Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item Card Grid -->
+      <div id="itemGrid" class="item-grid">
+        <!-- Rendered dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 2: POST LOST ITEM -->
+    <section id="postLostTab" class="tab-content">
+      <div class="card" style="max-width: 740px; margin: 0 auto;">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">Report a Lost Item</h3>
+            <p class="card-subtitle">Provide accurate details to help campus peers and staff identify your missing property.</p>
+          </div>
+        </div>
+
+        <!-- Duplicate warning placeholder -->
+        <div id="lostDuplicateWarning" style="display: none; margin-bottom: 16px;"></div>
+
+        <form id="postLostForm" enctype="multipart/form-data">
+          <input type="hidden" name="post_type" value="LOST">
+
+          <div class="form-group">
+            <label for="lostTitle">Item Title *</label>
+            <input type="text" name="title" id="lostTitle" class="form-control" placeholder="e.g. Black Dell Inspiron Laptop Backpack" required>
+            <span class="field-hint">Specify the brand, model, or primary color</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lostCategory">Category *</label>
+              <select name="category_id" id="lostCategory" class="form-control category-select" required>
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="lostDate">Date Lost *</label>
+              <input type="date" name="item_date" id="lostDate" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="lostLocation">Lost Location *</label>
+              <input type="text" name="location" id="lostLocation" class="form-control" placeholder="e.g. Central Library 2nd Floor Reading Hall" required>
+            </div>
+            <div class="form-group">
+              <label for="lostTime">Approximate Time</label>
+              <input type="time" name="approximate_time" id="lostTime" class="form-control" step="60">
+              <span class="field-hint">24-hour time format (HH:mm)</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lostDescription">Detailed Description *</label>
+            <textarea name="description" id="lostDescription" class="form-control" rows="3" placeholder="Describe the item, contents, brand (min 15 chars; must begin with words)..." required></textarea>
+            <span class="field-hint">Must not begin with a number. Minimum 15 meaningful characters.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="lostCharacteristics">Identifying Characteristics *</label>
+            <textarea name="identifying_characteristics" id="lostCharacteristics" class="form-control" rows="2" placeholder="Distinctive stickers, scratches, zipper tags, or keychains..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="lostImage">Item Photograph (Optional, Max 5MB, JPG/PNG/WebP)</label>
+            <input type="file" name="item_image" id="lostImage" class="form-control" accept="image/jpeg,image/png,image/webp">
+            <div id="lostImagePreviewContainer" style="display: none;" class="image-preview-box">
+              <img id="lostImagePreview" src="" alt="Lost Item Preview" class="image-preview-thumb">
+              <div style="flex: 1; font-size: 0.82rem; color: var(--text-main);" id="lostImageFileName"></div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="clearImagePreview('lostImage', 'lostImagePreviewContainer')">Remove</button>
+            </div>
+          </div>
+
+          <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 14px; background: var(--bg-card-subtle); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <input type="checkbox" name="is_valuable" id="lostValuable" value="true" style="margin-top: 2px;">
+            <label for="lostValuable" style="font-weight: 500; cursor: pointer; font-size: 0.88rem; margin-bottom: 0;">
+              This is a high-value item (e.g. Laptop, Smartphone, Expensive Jewelry, Official Credentials)
+            </label>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; padding-left: 6px;">
+            Note: High-value posts undergo administrative review before being published in public search.
+          </div>
+
+          <button type="submit" id="lostSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 11px; font-size: 0.95rem;">
+            Submit Lost Item Report
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: POST FOUND ITEM -->
+    <section id="postFoundTab" class="tab-content">
+      <div class="card" style="max-width: 740px; margin: 0 auto;">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">Report a Found Item</h3>
+            <p class="card-subtitle">If you discovered property on campus, report it here so the rightful owner can verify and claim it.</p>
+          </div>
+        </div>
+
+        <!-- Duplicate warning placeholder -->
+        <div id="foundDuplicateWarning" style="display: none; margin-bottom: 16px;"></div>
+
+        <form id="postFoundForm" enctype="multipart/form-data">
+          <input type="hidden" name="post_type" value="FOUND">
+
+          <div class="form-group">
+            <label for="foundTitle">Item Title *</label>
+            <input type="text" name="title" id="foundTitle" class="form-control" placeholder="e.g. Silver Metallic Keychain with 3 Keys" required>
+            <span class="field-hint">General description without revealing secret ownership marks</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="foundCategory">Category *</label>
+              <select name="category_id" id="foundCategory" class="form-control category-select" required>
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="foundDate">Date Found *</label>
+              <input type="date" name="item_date" id="foundDate" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="foundLocation">Found Location *</label>
+              <input type="text" name="location" id="foundLocation" class="form-control" placeholder="e.g. Science Block Ground Floor Canteen" required>
+            </div>
+            <div class="form-group">
+              <label for="foundTime">Approximate Time</label>
+              <input type="time" name="approximate_time" id="foundTime" class="form-control" step="60">
+              <span class="field-hint">24-hour time format (HH:mm)</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="foundDescription">Detailed Description *</label>
+            <textarea name="description" id="foundDescription" class="form-control" rows="3" placeholder="Describe the item found (min 15 chars; must begin with words)..." required></textarea>
+            <span class="field-hint">Must not begin with a number. Minimum 15 meaningful characters.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="foundCharacteristics">Identifying Characteristics *</label>
+            <textarea name="identifying_characteristics" id="foundCharacteristics" class="form-control" rows="2" placeholder="Visible characteristics, color, brand..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="foundImage">Item Photograph (Optional, Max 5MB, JPG/PNG/WebP)</label>
+            <input type="file" name="item_image" id="foundImage" class="form-control" accept="image/jpeg,image/png,image/webp">
+            <div id="foundImagePreviewContainer" style="display: none;" class="image-preview-box">
+              <img id="foundImagePreview" src="" alt="Found Item Preview" class="image-preview-thumb">
+              <div style="flex: 1; font-size: 0.82rem; color: var(--text-main);" id="foundImageFileName"></div>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="clearImagePreview('foundImage', 'foundImagePreviewContainer')">Remove</button>
+            </div>
+          </div>
+
+          <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 14px; background: var(--bg-card-subtle); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+            <input type="checkbox" name="is_valuable" id="foundValuable" value="true" style="margin-top: 2px;">
+            <label for="foundValuable" style="font-weight: 500; cursor: pointer; font-size: 0.88rem; margin-bottom: 0;">
+              This is a high-value item requiring administrator verification
+            </label>
+          </div>
+
+          <button type="submit" id="foundSubmitBtn" class="btn btn-teal" style="width: 100%; padding: 11px; font-size: 0.95rem;">
+            Submit Found Item Report
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 4: SMART MATCHES -->
+    <section id="matchesTab" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">🎯 Potential Lost & Found Matches</h3>
+            <p class="card-subtitle">
+              Automated correlation algorithm comparing your active posts against complementary campus listings.
+            </p>
+          </div>
+          <button id="refreshMatchesBtn" class="btn btn-secondary btn-sm">🔄 Recalculate Matches</button>
+        </div>
+
+        <div id="smartMatchesContainer">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: MY POSTS -->
+    <section id="myPostsTab" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">My Submitted Posts</h3>
+            <p class="card-subtitle">Manage your lost and found postings, edit details, or track verification status.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="switchTab('postLostTab')">+ Report New Item</button>
+        </div>
+
+        <div id="myPostsContainer">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: MY CLAIMS -->
+    <section id="myClaimsTab" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">My Submitted Claims</h3>
+            <p class="card-subtitle">Track the verification status of ownership claims submitted for found items.</p>
+          </div>
+          <button id="refreshMyClaimsBtn" class="btn btn-secondary btn-sm">🔄 Refresh Claims</button>
+        </div>
+
+        <div id="myClaimsContainer">
+          <!-- Rendered via js/claims.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: NOTIFICATIONS -->
+    <section id="notificationsTab" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">🔔 Notification Center</h3>
+            <p class="card-subtitle">Real-time alerts for item matches, claim approvals, post verifications, and campus returns.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="markAllReadBtn" class="btn btn-secondary btn-sm">✓ Mark All Read</button>
+            <button id="refreshNotifsBtn" class="btn btn-secondary btn-sm">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div id="notificationsContainer">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: PROFILE & SECURITY -->
+    <section id="profileTab" class="tab-content">
+      <div class="card" style="max-width: 660px; margin: 0 auto 20px auto;">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">My Account Profile</h3>
+            <p class="card-subtitle">Institutional profile information and contact details.</p>
+          </div>
+        </div>
+
+        <form id="profileForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileFullName">Full Name *</label>
+              <input 
+                type="text" 
+                id="profileFullName" 
+                class="form-control" 
+                required
+                minlength="2"
+                maxlength="100"
+                pattern="^[A-Za-z\s.'-]+$"
+                title="Full Name must only contain letters, spaces, hyphens, and apostrophes."
+              >
+              <span class="field-hint">Letters only</span>
+              <div id="profileFullNameFeedback" class="input-feedback"></div>
+            </div>
+            <div class="form-group">
+              <label for="profileInstId">Institutional ID</label>
+              <input type="text" id="profileInstId" class="form-control" disabled style="background-color: var(--bg-card-subtle);">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileEmail">Email Address</label>
+              <input type="email" id="profileEmail" class="form-control" disabled style="background-color: var(--bg-card-subtle);">
+            </div>
+            <div class="form-group">
+              <label for="profilePhone">Phone Number *</label>
+              <input 
+                type="tel" 
+                id="profilePhone" 
+                class="form-control" 
+                required
+                minlength="10"
+                maxlength="10"
+                inputmode="numeric"
+                pattern="^\d{10}$"
+                placeholder="10-digit mobile number"
+              >
+              <span class="field-hint">Exactly 10 digits</span>
+              <div id="profilePhoneFeedback" class="input-feedback"></div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileDept">Department *</label>
+              <input type="text" id="profileDept" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="profileCourse">Course / Major</label>
+              <input type="text" id="profileCourse" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="profileSemester">Semester / Year</label>
+            <input type="text" id="profileSemester" class="form-control">
+          </div>
+
+          <button type="submit" id="updateProfileBtn" class="btn btn-primary" style="padding: 10px 20px;">
+            Save Profile Updates
+          </button>
+        </form>
+      </div>
+
+      <!-- Password Change Card -->
+      <div class="card" style="max-width: 660px; margin: 0 auto;">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">Change Account Password</h3>
+            <p class="card-subtitle">Ensure your account uses a strong, unique password.</p>
+          </div>
+        </div>
+
+        <form id="passwordForm">
+          <div class="form-group">
+            <label for="currentPassword">Current Password *</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="currentPassword" class="form-control" required>
+              <button type="button" class="password-toggle-btn" data-target="currentPassword" title="Show or hide password" aria-label="Toggle password visibility">
+                👁️
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newPassword">New Password *</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="newPassword" class="form-control" placeholder="Min. 8 characters" required>
+                <button type="button" class="password-toggle-btn" data-target="newPassword" title="Show or hide password" aria-label="Toggle password visibility">
+                  👁️
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="confirmNewPassword">Confirm New Password *</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="confirmNewPassword" class="form-control" placeholder="Re-enter password" required>
+                <button type="button" class="password-toggle-btn" data-target="confirmNewPassword" title="Show or hide password" aria-label="Toggle password visibility">
+                  👁️
+                </button>
+              </div>
+            </div>
+          </div>
+          <button type="submit" id="updatePasswordBtn" class="btn btn-secondary">
+            Update Password
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ITEM DETAIL & CLAIM MODAL -->
+  <div id="itemModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 660px;">
+      <button class="modal-close" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+      <div id="modalBody">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT ITEM POST MODAL -->
+  <div id="editItemModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 640px;">
+      <button class="modal-close" onclick="closeEditModal()" aria-label="Close modal">&times;</button>
+      <h3 style="margin-bottom: 6px; color: var(--primary);">✏️ Edit Item Post</h3>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px;">
+        Update your post details. All changes must comply with portal validation rules.
+      </p>
+
+      <form id="editItemForm" onsubmit="handleEditItemSubmit(event)">
+        <input type="hidden" id="editItemId">
+
+        <div class="form-group">
+          <label for="editTitle">Item Title *</label>
+          <input type="text" id="editTitle" class="form-control" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editCategory">Category *</label>
+            <select id="editCategory" class="form-control category-select" required></select>
+          </div>
+          <div class="form-group">
+            <label for="editDate">Date *</label>
+            <input type="date" id="editDate" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editLocation">Location *</label>
+            <input type="text" id="editLocation" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="editTime">Approximate Time</label>
+            <input type="time" id="editTime" class="form-control" step="60">
+            <span class="field-hint">24-hour time format (HH:mm)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editDescription">Detailed Description *</label>
+          <textarea id="editDescription" class="form-control" rows="3" required></textarea>
+          <span class="field-hint">Must not begin with a number. Minimum 15 meaningful characters.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="editCharacteristics">Identifying Characteristics *</label>
+          <textarea id="editCharacteristics" class="form-control" rows="2" required></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <button type="submit" id="saveEditBtn" class="btn btn-primary" style="flex: 1;">
+            Save Changes
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MISUSE REPORTING MODAL -->
+  <div id="misuseReportModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 520px;">
+      <button class="modal-close" onclick="closeMisuseModal()" aria-label="Close modal">&times;</button>
+      <h3 style="margin-bottom: 6px; color: var(--primary);">🚩 Report User for Misuse</h3>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px;">
+        Submit a formal report against inappropriate behavior, fraudulent claims, fake posts, or harassment.
+      </p>
+
+      <form id="misuseReportForm" onsubmit="handleMisuseReportSubmit(event)">
+        <input type="hidden" id="reportTargetUserId">
+        <input type="hidden" id="reportRelatedItemId">
+
+        <div class="form-group">
+          <label>Reported User</label>
+          <input type="text" id="reportTargetUserName" class="form-control" disabled style="background-color: var(--bg-card-subtle);">
+        </div>
+
+        <div class="form-group">
+          <label for="misuseReason">Reason for Report *</label>
+          <select id="misuseReason" class="form-control" required>
+            <option value="">-- Select Reason --</option>
+            <option value="Fake Claim">Fake / Fraudulent Claim</option>
+            <option value="Fake Post">Fake / Misleading Post</option>
+            <option value="Spam">Spamming / Irrelevant Content</option>
+            <option value="Harassment">Harassment / Abusive Behavior</option>
+            <option value="Misuse">General Portal Rule Violation</option>
+            <option value="Other">Other Issues</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="misuseDescription">Explanation (Optional)</label>
+          <textarea id="misuseDescription" class="form-control" rows="3" placeholder="Provide optional details or context for the administrator..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 18px;">
+          <button type="submit" id="submitReportBtn" class="btn btn-danger" style="flex: 1;">
+            Submit Report
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeMisuseModal()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Minimal Footer -->
+  <footer class="footer">
+    &copy; 2026 College Lost & Found Portal &bull; Official Campus Platform
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/items.js"></script>
+  <script src="js/claims.js"></script>
+</body>
+</html>

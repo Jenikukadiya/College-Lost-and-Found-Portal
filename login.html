@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - College Lost & Found Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">🔍</div>
+      <span>Campus Lost & Found</span>
+      <span class="brand-badge">Official</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="register.html" class="btn btn-secondary btn-sm">Create Account</a></li>
+    </ul>
+  </header>
+
+  <main class="container">
+    <div class="auth-container">
+      <div class="card">
+        
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in using your institutional email or ID</p>
+        </div>
+
+        <!-- Feedback Alert Container -->
+        <div id="alertContainer"></div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="identifier">College Email or Institutional ID *</label>
+            <input 
+              type="text" 
+              id="identifier" 
+              class="form-control" 
+              placeholder="e.g. rahul.sharma@college.edu or STU2026001" 
+              autocomplete="username"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label for="password" style="margin-bottom: 0;">Password *</label>
+              <a href="#" id="forgotPasswordLink" style="font-size: 0.82rem; color: var(--secondary);">Forgot Password?</a>
+            </div>
+            <div class="password-input-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                class="form-control" 
+                placeholder="Enter your account password" 
+                autocomplete="current-password"
+                required
+              >
+              <button type="button" class="password-toggle-btn" data-target="password" title="Show or hide password" aria-label="Toggle password visibility">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 11px; font-size: 0.95rem; margin-top: 10px;">
+            Sign In to Portal
+          </button>
+        </form>
+
+        <!-- Viva Demo Credentials Helper -->
+        <div class="demo-helper-box">
+          <div class="demo-helper-title">
+            <span>🔑</span> Quick Demo Accounts (Viva Presentation):
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="fillCredentials('admin@college.edu', 'AdminSecurePass123!')">
+              Admin
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="fillCredentials('alice@college.edu', 'StudentPass123!')">
+              Student (Alice)
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="fillCredentials('rahul.sharma@college.edu', 'Student@123')">
+              Student (Rahul)
+            </button>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-muted);">
+          Don't have an account? <a href="register.html" style="color: var(--secondary); font-weight: 500;">Register here</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FORGOT PASSWORD MODAL -->
+  <div id="forgotPasswordModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 480px;">
+      <button class="modal-close" id="closeForgotModalBtn" aria-label="Close modal">&times;</button>
+      <h3 style="margin-bottom: 6px; color: var(--primary);">Reset Password</h3>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px;">
+        Verify your registered college email and institutional ID to set a new password.
+      </p>
+
+      <div id="forgotAlertContainer"></div>
+
+      <form id="forgotPasswordForm">
+        <div class="form-group">
+          <label for="resetEmail">Registered College Email *</label>
+          <input type="email" id="resetEmail" class="form-control" placeholder="e.g. student@college.edu" required>
+        </div>
+
+        <div class="form-group">
+          <label for="resetInstId">Institutional ID *</label>
+          <input type="text" id="resetInstId" class="form-control" placeholder="e.g. STU2026001" required>
+        </div>
+
+        <div class="form-group">
+          <label for="resetNewPassword">New Password *</label>
+          <div class="password-input-wrapper">
+            <input type="password" id="resetNewPassword" class="form-control" placeholder="Min. 8 chars with upper, lower, number, symbol" required>
+            <button type="button" class="password-toggle-btn" data-target="resetNewPassword" title="Show or hide password" aria-label="Toggle password visibility">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="resetSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 10px; margin-top: 10px;">
+          Confirm Password Reset
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Minimal Footer -->
+  <footer class="footer">
+    &copy; 2026 College Lost & Found Portal &bull; Official Campus Platform
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script>
+    function fillCredentials(id, pass) {
+      const idInput = document.getElementById('identifier');
+      const passInput = document.getElementById('password');
+      if (idInput) idInput.value = id;
+      if (passInput) passInput.value = pass;
+    }
+  </script>
+</body>
+</html>

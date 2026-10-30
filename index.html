@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Lost & Found Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">🔍</div>
+      <span>Campus Lost & Found</span>
+      <span class="brand-badge">Official</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="login.html" class="btn btn-secondary btn-sm">Sign In</a></li>
+      <li><a href="register.html" class="btn btn-primary btn-sm">Create Account</a></li>
+    </ul>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    
+    <!-- Hero Section -->
+    <section class="card" style="padding: 48px 32px; text-align: center; margin-top: 12px;">
+      <div style="display: inline-block; margin-bottom: 12px;">
+        <span class="badge badge-published" style="padding: 5px 12px;">Verified Campus Service</span>
+      </div>
+      <h1 style="font-size: 2.2rem; font-weight: 700; color: var(--primary); margin-bottom: 14px; max-width: 760px; margin-left: auto; margin-right: auto;">
+        Lost something? Let's help you find it.
+      </h1>
+      <p style="font-size: 1.05rem; color: var(--text-muted); max-width: 640px; margin: 0 auto 28px auto; line-height: 1.6;">
+        The official centralized portal for college students, faculty, and staff to report lost belongings, return found items, and safely verify campus ownership.
+      </p>
+
+      <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+        <a href="portal.html?tab=postLostTab" class="btn btn-primary btn-lg">
+          📢 Report Lost Item
+        </a>
+        <a href="portal.html?tab=postFoundTab" class="btn btn-teal btn-lg">
+          💡 Report Found Item
+        </a>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <a href="portal.html" style="font-size: 0.88rem; color: var(--secondary); font-weight: 500;">
+          Browse all published campus items &rarr;
+        </a>
+      </div>
+    </section>
+
+    <!-- Institutional Access Notice -->
+    <div class="alert alert-info" style="margin-bottom: 28px;">
+      <span style="font-size: 1.1rem; line-height: 1;">ℹ️</span>
+      <div>
+        <strong>Verified Institutional Access:</strong> This portal is restricted to authorized college students, faculty, and staff. Institutional credentials and student/employee IDs are required for account registration and claim verification.
+      </div>
+    </div>
+
+    <!-- How It Works Section (3 Practical Steps) -->
+    <section style="margin-bottom: 24px;">
+      <div style="text-align: center; margin-bottom: 22px;">
+        <h2 style="font-size: 1.45rem; color: var(--primary); margin-bottom: 4px;">How It Works</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Three simple steps to report, identify, and recover missing items on campus.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px;">
+        <!-- Step 1 -->
+        <div class="card" style="padding: 22px; margin-bottom: 0;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary); font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center;">
+              1
+            </div>
+            <h3 style="font-size: 1.05rem; margin-bottom: 0;">Report Item</h3>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+            Submit specific details about the item you lost or discovered on campus, including location, approximate time, identifying characteristics, and photographs.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card" style="padding: 22px; margin-bottom: 0;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background-color: var(--secondary-light); color: var(--secondary); font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center;">
+              2
+            </div>
+            <h3 style="font-size: 1.05rem; margin-bottom: 0;">Match & Verify</h3>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+            Our automated matching engine correlates reports in real time. Submit an ownership claim backed by identifying proof, distinctive marks, or purchase receipts.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="card" style="padding: 22px; margin-bottom: 0;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background-color: #ECFDF5; color: #065F46; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; justify-content: center;">
+              3
+            </div>
+            <h3 style="font-size: 1.05rem; margin-bottom: 0;">Safe Recovery</h3>
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+            Complete an administrator-verified handover at designated campus points. Every verified return is recorded in tamper-evident audit logs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="footer">
+    &copy; 2026 College Lost & Found Portal &bull; Department of Computer Science &bull; Software Engineering Lab Project
+  </footer>
+
+</body>
+</html>

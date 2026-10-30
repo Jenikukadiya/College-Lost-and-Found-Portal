@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrator Dashboard - College Lost & Found</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="admin.html" class="brand">
+      <div class="brand-icon">🛡️</div>
+      <span>Administrator Control Panel</span>
+      <span class="brand-badge" style="background-color: #FEF2F2; color: #B91C1C;">Admin</span>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <div id="adminGreeting" style="font-size: 0.88rem; color: var(--text-main); font-weight: 500; padding: 4px 10px; background-color: var(--bg-card-subtle); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        Administrator Session
+      </div>
+      <a href="portal.html" class="btn btn-secondary btn-sm">User Portal</a>
+      <button id="adminLogoutBtn" class="btn btn-danger-outline btn-sm">Log Out</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- KPI Metrics Stat Cards Grid -->
+    <div class="stats-grid" id="adminStatsGrid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Registered Users</span>
+          <span class="stat-icon">👥</span>
+        </div>
+        <div class="stat-value" id="statTotalUsers">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Pending Valuable Posts</span>
+          <span class="stat-icon">💎</span>
+        </div>
+        <div class="stat-value" id="statPendingValuable" style="color: #B45309;">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Claims Under Review</span>
+          <span class="stat-icon">⚖️</span>
+        </div>
+        <div class="stat-value" id="statPendingClaims" style="color: var(--secondary);">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Open Misuse Reports</span>
+          <span class="stat-icon">🚩</span>
+        </div>
+        <div class="stat-value" id="statPendingReports" style="color: #B91C1C;">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Published Items</span>
+          <span class="stat-icon">📦</span>
+        </div>
+        <div class="stat-value" id="statPublishedItems" style="color: #047857;">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">Archived Items</span>
+          <span class="stat-icon">🗄️</span>
+        </div>
+        <div class="stat-value" id="statArchivedItems" style="color: var(--text-muted);">-</div>
+      </div>
+    </div>
+
+    <!-- Administrative Tabs -->
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="valuableTab" role="tab">💎 Item Approvals</button>
+      <button class="tab-btn" data-tab="claimsTab" role="tab">⚖️ Claim Reviews</button>
+      <button class="tab-btn" data-tab="reportsTab" role="tab">🚩 Reported Users</button>
+      <button class="tab-btn" data-tab="usersTab" role="tab">🚫 Blocked Users</button>
+      <button class="tab-btn" data-tab="archiveTab" role="tab">🗄️ Archived Items</button>
+      <button class="tab-btn" data-tab="auditTab" role="tab">📜 Audit Logs</button>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="adminAlertContainer"></div>
+
+    <!-- TAB 1: VALUABLE POST APPROVALS -->
+    <section id="valuableTab" class="tab-content active">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">Pending Valuable Items Review</h3>
+            <p class="card-subtitle">
+              High-value items requiring administrator approval before becoming visible to campus users.
+            </p>
+          </div>
+          <button id="refreshValuableBtn" class="btn btn-secondary btn-sm">🔄 Refresh List</button>
+        </div>
+
+        <div id="valuableItemsContainer">
+          <!-- Rendered dynamically via js/admin.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: CLAIMS MANAGEMENT -->
+    <section id="claimsTab" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">Claim Verification & Return Management</h3>
+            <p class="card-subtitle">
+              Examine ownership evidence, approve verified claims, reject invalid claims, and track item returns.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <label for="adminClaimStatusFilter" style="margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted);">Status:</label>
+            <select id="adminClaimStatusFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
+              <option value="all">All Claims</option>
+              <option value="Pending" selected>Pending Review</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+            <button id="refreshAdminClaimsBtn" class="btn btn-secondary btn-sm">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div id="adminClaimsContainer">
+          <!-- Rendered dynamically via js/admin.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: REPORTED USERS (SIMPLIFIED MODERATION) -->
+    <section id="reportsTab" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">🚩 Reported Users</h3>
+            <p class="card-subtitle">
+              Review reports submitted against campus users. Examine who reported whom, read explanations, and decide whether to <strong>Block User</strong> or <strong>Dismiss Report</strong>.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <label for="adminReportStatusFilter" style="margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted);">Filter:</label>
+            <select id="adminReportStatusFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
+              <option value="Pending" selected>Pending Action</option>
+              <option value="all">All Reports</option>
+              <option value="Resolved">Resolved / Blocked</option>
+              <option value="Dismissed">Dismissed</option>
+            </select>
+            <button id="refreshReportsBtn" class="btn btn-secondary btn-sm">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div id="misuseReportsContainer">
+          <!-- Rendered dynamically via js/admin.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: BLOCKED USERS (SIMPLIFIED UNBLOCKING) -->
+    <section id="usersTab" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">🚫 Blocked Users</h3>
+            <p class="card-subtitle">
+              Accounts currently restricted from portal login and features. Review the reason and administrator, and click <strong>Unblock User</strong> to restore access.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="refreshBlockedUsersBtn" class="btn btn-secondary btn-sm">🔄 Refresh</button>
+            <button id="viewBlockedHistoryBtn" class="btn btn-secondary btn-sm">📜 Past Block History</button>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="form-row" style="margin-bottom: 16px;">
+          <div class="form-group" style="grid-column: span 3; margin-bottom: 0;">
+            <label for="blockedUserSearchInput">Search Blocked Users</label>
+            <input type="text" id="blockedUserSearchInput" class="form-control" placeholder="Search by name, institutional ID, or email...">
+          </div>
+        </div>
+
+        <div id="blockedUsersContainer">
+          <!-- Rendered dynamically via js/admin.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ARCHIVED ITEMS -->
+    <section id="archiveTab" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">🗄️ Inactive & Archived Item Records</h3>
+            <p class="card-subtitle">
+              Historical records of completed returns and inactive posts archived according to the 60-day policy.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="runArchiveBatchBtn" class="btn btn-primary btn-sm">
+              ⚡ Run Archival Batch Now
+            </button>
+            <button id="refreshArchivedBtn" class="btn btn-secondary btn-sm">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div id="archivedItemsContainer">
+          <!-- Rendered dynamically via js/admin.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: AUDIT LOGS -->
+    <section id="auditTab" class="tab-content" style="display: none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">📜 Administrative Audit Trail</h3>
+            <p class="card-subtitle">
+              Tamper-evident chronological audit logs recording approvals, rejections, user blocking, and system events.
+            </p>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <label for="auditActionFilter" style="margin-bottom: 0; font-size: 0.85rem; color: var(--text-muted);">Action:</label>
+            <select id="auditActionFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
+              <option value="all">All Actions</option>
+              <option value="APPROVE_VALUABLE_ITEM">Approve Valuable Item</option>
+              <option value="REJECT_VALUABLE_ITEM">Reject Valuable Item</option>
+              <option value="APPROVE_CLAIM">Approve Claim</option>
+              <option value="REJECT_CLAIM">Reject Claim</option>
+              <option value="CONFIRM_ITEM_RETURN">Confirm Item Return</option>
+              <option value="BLOCK_USER">Block User</option>
+              <option value="UNBLOCK_USER">Unblock User</option>
+              <option value="RESOLVE_MISUSE_REPORT">Resolve Misuse Report</option>
+              <option value="REMOVE_INAPPROPRIATE_ITEM">Remove Post</option>
+              <option value="RUN_ARCHIVE">Run Archival Batch</option>
+            </select>
+            <button id="refreshAuditBtn" class="btn btn-secondary btn-sm">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div id="auditLogsContainer">
+          <!-- Rendered dynamically via js/admin.js -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ADMIN CLAIM REVIEW & VERIFICATION MODAL -->
+  <div id="adminClaimModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 680px;">
+      <button class="modal-close" id="adminModalCloseBtn" aria-label="Close modal">&times;</button>
+      <div id="adminClaimModalBody">
+        <!-- Rendered dynamically via js/admin.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCKED USERS HISTORY MODAL -->
+  <div id="blockedHistoryModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 720px;">
+      <button class="modal-close" onclick="closeBlockedHistoryModal()" aria-label="Close modal">&times;</button>
+      <h3 style="margin-bottom: 14px; color: var(--primary);">📜 User Blocking History</h3>
+      <div id="blockedHistoryBody">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimal Footer -->
+  <footer class="footer">
+    &copy; 2026 College Lost & Found Portal &bull; Official Campus Platform
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

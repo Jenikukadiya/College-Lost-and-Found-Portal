@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - College Lost & Found Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">🔍</div>
+      <span>Campus Lost & Found</span>
+      <span class="brand-badge">Official</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="login.html" class="btn btn-secondary btn-sm">Sign In</a></li>
+    </ul>
+  </header>
+
+  <main class="container">
+    <div class="auth-container" style="max-width: 580px;">
+      <div class="card">
+        
+        <div class="auth-header">
+          <h2>Create Account</h2>
+          <p>Register as a verified student, faculty, or staff member</p>
+        </div>
+
+        <!-- Feedback Alert Container -->
+        <div id="alertContainer"></div>
+
+        <form id="registerForm" novalidate>
+          <!-- Role Selection -->
+          <div class="form-group">
+            <label for="role">User Role *</label>
+            <select id="role" class="form-control" required>
+              <option value="">-- Select Your Role --</option>
+              <option value="Student">Student</option>
+              <option value="Faculty">Faculty</option>
+              <option value="Staff">Staff</option>
+            </select>
+            <div id="roleFeedback" class="input-feedback"></div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fullName">Full Name *</label>
+              <input 
+                type="text" 
+                id="fullName" 
+                class="form-control" 
+                placeholder="e.g. Rahul Sharma" 
+                autocomplete="name" 
+                required 
+                minlength="2" 
+                maxlength="100"
+                pattern="^[A-Za-z\s.'-]+$"
+                title="Full Name must only contain letters, spaces, hyphens, and apostrophes. Numbers are not allowed."
+              >
+              <span class="field-hint">Letters only (no numbers)</span>
+              <div id="fullNameFeedback" class="input-feedback"></div>
+            </div>
+            <div class="form-group">
+              <label for="institutionalId">Institutional ID *</label>
+              <input 
+                type="text" 
+                id="institutionalId" 
+                class="form-control" 
+                placeholder="e.g. STU2026001" 
+                autocomplete="off" 
+                required 
+                minlength="3" 
+                maxlength="30"
+                pattern="^[A-Za-z0-9_-]{3,30}$"
+                title="3 to 30 alphanumeric characters (letters, numbers, hyphens, underscores). No spaces."
+              >
+              <span class="field-hint">Alphanumeric ID (no spaces)</span>
+              <div id="institutionalIdFeedback" class="input-feedback"></div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">College Email *</label>
+              <input 
+                type="email" 
+                id="email" 
+                class="form-control" 
+                placeholder="name@college.edu" 
+                autocomplete="email" 
+                required
+              >
+              <span class="field-hint">Valid institutional email address</span>
+              <div id="emailFeedback" class="input-feedback"></div>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                class="form-control" 
+                placeholder="10-digit mobile number" 
+                inputmode="numeric" 
+                autocomplete="tel" 
+                required 
+                minlength="10" 
+                maxlength="10"
+                pattern="^\d{10}$"
+                title="Phone number must contain exactly 10 digits."
+              >
+              <span class="field-hint">Exactly 10 digits</span>
+              <div id="phoneFeedback" class="input-feedback"></div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="department">Department *</label>
+              <input 
+                type="text" 
+                id="department" 
+                class="form-control" 
+                placeholder="e.g. Computer Science" 
+                required
+                minlength="2"
+                maxlength="100"
+                pattern="^[A-Za-z\s]+$"
+                title="Department must contain letters only."
+              >
+              <span class="field-hint">Letters only</span>
+              <div id="departmentFeedback" class="input-feedback"></div>
+            </div>
+            <div class="form-group" id="courseGroup">
+              <label for="course">Course / Major</label>
+              <input 
+                type="text" 
+                id="course" 
+                class="form-control" 
+                placeholder="e.g. Computer Science"
+                minlength="2"
+                maxlength="100"
+                pattern="^[A-Za-z\s]+$"
+                title="Course must contain letters only."
+              >
+              <span class="field-hint">Applicable to Student role</span>
+              <div id="courseFeedback" class="input-feedback"></div>
+            </div>
+          </div>
+
+          <div class="form-group" id="semesterGroup">
+            <label for="semester">Semester (1 to 8)</label>
+            <input 
+              type="text" 
+              id="semester" 
+              class="form-control" 
+              placeholder="e.g. 6"
+              inputmode="numeric"
+              maxlength="10"
+              pattern="^[1-8]$"
+              title="Please enter a valid semester number between 1 and 8."
+            >
+            <span class="field-hint">Number from 1 to 8</span>
+            <div id="semesterFeedback" class="input-feedback"></div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password *</label>
+              <div class="password-input-wrapper">
+                <input 
+                  type="password" 
+                  id="password" 
+                  class="form-control" 
+                  placeholder="Min. 8 chars, A-z, 0-9, !@#" 
+                  autocomplete="new-password" 
+                  required 
+                  minlength="8"
+                >
+                <button type="button" class="password-toggle-btn" data-target="password" title="Show or hide password" aria-label="Toggle password visibility">
+                  👁️
+                </button>
+              </div>
+              <div id="passwordFeedback" class="input-feedback"></div>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password *</label>
+              <div class="password-input-wrapper">
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  class="form-control" 
+                  placeholder="Re-enter password" 
+                  autocomplete="new-password" 
+                  required 
+                  minlength="8"
+                >
+                <button type="button" class="password-toggle-btn" data-target="confirmPassword" title="Show or hide password" aria-label="Toggle password visibility">
+                  👁️
+                </button>
+              </div>
+              <div id="confirmPasswordFeedback" class="input-feedback"></div>
+            </div>
+          </div>
+
+          <!-- Password Requirements Live Checklist -->
+          <div class="password-checklist-card" id="passwordChecklist">
+            <div class="checklist-title">Password Security Requirements:</div>
+            <div class="checklist-grid">
+              <div class="checklist-item" id="chkLength"><span class="chk-icon">○</span> At least 8 characters</div>
+              <div class="checklist-item" id="chkUpper"><span class="chk-icon">○</span> 1 Uppercase letter (A-Z)</div>
+              <div class="checklist-item" id="chkLower"><span class="chk-icon">○</span> 1 Lowercase letter (a-z)</div>
+              <div class="checklist-item" id="chkNumber"><span class="chk-icon">○</span> 1 Number (0-9)</div>
+              <div class="checklist-item" id="chkSpecial"><span class="chk-icon">○</span> 1 Special character (!@#$)</div>
+            </div>
+          </div>
+
+          <!-- Consent -->
+          <div class="form-group" style="display: flex; gap: 8px; align-items: flex-start; margin-bottom: 22px;">
+            <input type="checkbox" id="termsConsent" required style="margin-top: 4px;">
+            <label for="termsConsent" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400; line-height: 1.4;">
+              I agree to the college portal terms of use and confirm that submitted lost/found item information will be accurate and truthful.
+            </label>
+          </div>
+
+          <button type="submit" id="registerSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 11px; font-size: 0.95rem;">
+            Create Account
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-muted);">
+          Already registered? <a href="login.html" style="color: var(--secondary); font-weight: 500;">Sign in here</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Minimal Footer -->
+  <footer class="footer">
+    &copy; 2026 College Lost & Found Portal &bull; Official Campus Platform
+  </footer>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>
